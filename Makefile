@@ -1,10 +1,10 @@
 CC=i686-elf-gcc
 CFLAGS=-ffreestanding -nostdlib
 LDFLAGS=
-SOURCES=kernel/kernel.c kernel/ports.c kernel/screen.c
+SOURCES=kernel/kernel.c kernel/ports.c kernel/screen.c kernel/cpu/idt.c kernel/cpu/isr.c
 SRCDIR=source
 BINDIR=binaries
-OBJ=$(addprefix $(BINDIR)/, ${SOURCES:.c=.o})
+OBJ=$(addprefix $(BINDIR)/, ${SOURCES:.c=.o} kernel/cpu/interrupt.o)
 
 all: $(BINDIR)/os.bin
 

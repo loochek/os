@@ -1,13 +1,13 @@
 #include "ports.h"
 #include "screen.h"
-//#include "cpu/isr.h"
+#include "cpu/isr.h"
 
 void kmain() 
 {
-	//isr_init();
+	isr_install();
 	clear_screen();
-	char* msg = "Hello";
+	char* msg = "Hello\n";
 	print(msg, WHITE_ON_BLACK);
-	//char* s = "Hello, world!";
-	//print(s, RED_ON_WHITE);
+	__asm__ __volatile__("int $2");
+	__asm__ __volatile__("int $3");
 }

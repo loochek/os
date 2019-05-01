@@ -13,7 +13,7 @@ mov bp, sp
 
 ;load kernel from disk
 mov bx, KERNEL_OFFSET
-mov dh, 4
+mov dh, 32
 call disk_load
 
 ;switch to 32-bit protected mode
