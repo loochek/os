@@ -1,6 +1,6 @@
 #include "screen.h"
 #include "ports.h"
-#include "memory.h"
+#include "../stdlib.h"
 
 //privates declaration
 
@@ -17,12 +17,18 @@ void set_cursor_offset(int offset);
 int get_offset(int col, int row);
 int get_offset_row(int offset);
 int get_offset_col(int offset);
+int print_char(char c, int col, int row, char attr);
 
 //public
 
-void print(char* message, char attr)
+void print_c(char* message, char attr)
 {
 	print_at(message, -1, -1, attr);
+}
+
+void print(char* message)
+{
+	print_at(message, -1, -1, WHITE_ON_BLACK);
 }
 
 void print_at(char* message, int col, int row, char attr)
