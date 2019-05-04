@@ -1,5 +1,5 @@
 #include "idt.h"
-#include "../stdlib.h"
+#include "../libc/types.h"
 
 void set_idt_gate(int n, u32 handler)
 {

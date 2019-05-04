@@ -2,7 +2,8 @@
 #include "idt.h"
 #include "../peripherals/screen.h"
 #include "../peripherals/ports.h"
-#include "../stdlib.h"
+#include "../libc/types.h"
+#include "../libc/string.h"
 
 isr_t interrupt_handlers[256];
 

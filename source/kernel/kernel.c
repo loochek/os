@@ -1,6 +1,7 @@
 #include "peripherals/ports.h"
 #include "peripherals/screen.h"
 #include "cpu/isr.h"
+#include "peripherals/keyboard.h"
 
 void kmain() 
 {

@@ -1,1 +1,0 @@
-wsl /bin/bash -ic "cd /mnt/d/TrashBox/progering/os && make"

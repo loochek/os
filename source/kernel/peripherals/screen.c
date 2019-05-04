@@ -1,6 +1,6 @@
 #include "screen.h"
 #include "ports.h"
-#include "../stdlib.h"
+#include "../libc/mem.h"
 
 //privates declaration
 
@@ -91,12 +91,12 @@ int print_char(char c, int col, int row, char attr)
 	if (offset >= MAX_ROWS * MAX_COLS * 2) 
 	{
 		for (int i = 1; i < MAX_ROWS; i++)
-			memcpy(get_offset(0, i) + VIDEO_ADDRESS,
-				get_offset(0, i - 1) + VIDEO_ADDRESS,
+            memcpy((char*)(get_offset(0, i) + VIDEO_ADDRESS),
+                (char*)(get_offset(0, i - 1) + VIDEO_ADDRESS),
 				MAX_COLS * 2);
 
 		/* Blank last line */
-		unsigned char* last_line = get_offset(0, MAX_ROWS - 1) + VIDEO_ADDRESS;
+        unsigned char* last_line = (unsigned char*)(get_offset(0, MAX_ROWS - 1) + VIDEO_ADDRESS);
 		for (int i = 0; i < MAX_COLS * 2; i += 2)
 		{
 			last_line[i] = 0;
