@@ -75,6 +75,7 @@ void isr_install()
 	set_idt_gate(47, (u32)irq15);
 
 	set_idt(); // Load with ASM
+    asm volatile("sti");
 }
 
 /* To print the message which defines every exception */

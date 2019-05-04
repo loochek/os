@@ -11,7 +11,6 @@
 #define  REG_SCREEN_CTRL 0x3D4
 #define  REG_SCREEN_DATA 0x3D5
 
-
 int get_cursor_offset();
 void set_cursor_offset(int offset);
 int get_offset(int col, int row);
@@ -20,6 +19,14 @@ int get_offset_col(int offset);
 int print_char(char c, int col, int row, char attr);
 
 //public
+
+void print_backspace()
+{
+    int offset = get_cursor_offset()-2;
+    int row = get_offset_row(offset);
+    int col = get_offset_col(offset);
+    print_char(0x08, col, row, WHITE_ON_BLACK);
+}
 
 void print_c(char* message, char attr)
 {
@@ -81,7 +88,11 @@ int print_char(char c, int col, int row, char attr)
 	{
 		row = get_offset_row(offset);
 		offset = get_offset(0, row + 1);
-	}
+    } else if (c == 0x08) /* Backspace */
+    {
+       vidmem[offset] = ' ';
+       vidmem[offset + 1] = (unsigned char)attr;
+    }
 	else 
 	{
 		vidmem[offset] = c;

@@ -14,23 +14,3 @@ void memset(u8 *dest, u8 val, u32 len)
     for ( ; len != 0; len--)
 		*temp++ = val;
 }
-
-void itoa(int n, char str[])
-{
-	int neg = 0;
-	if (n < 0)
-	{
-		neg = 1;
-		n = -n;
-	}
-	int i = 0;
-	while (n > 0)
-	{
-		str[i++] = '0' + n % 10;
-		n = n / 10;
-	}
-	if (neg)
-		str[i++] = '-';
-	str[i] = '\0';
-	reverse(str);
-}

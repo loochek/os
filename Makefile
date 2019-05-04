@@ -1,10 +1,10 @@
-CC=/home/loochek/opt/cross/bin/i386-elf-gcc
-CFLAGS=-ffreestanding -nostdlib -pedantic -Wall -W -Werror
+CC=i686-elf-gcc
+CFLAGS=-ffreestanding -nostdlib -pedantic -Wall -W -Werror -ggdb
 LDFLAGS=
-SRCDIR=source
+SRCDIR=sources
 BINDIR=binaries
-SOURCES=$(wildcard source/kernel/*.c $(SRCDIR)/kernel/peripherals/*.c $(SRCDIR)/cpu/*.c $(SRCDIR)/libc/*.c)
-OBJ=$(addprefix $(BINDIR)/, ${SOURCES:.c=.o} kernel/cpu/interrupt.o)
+SOURCES=$(wildcard $(SRCDIR)/kernel/*.c $(SRCDIR)/kernel/peripherals/*.c $(SRCDIR)/kernel/cpu/*.c $(SRCDIR)/kernel/libc/*.c)
+OBJ=${SOURCES:$(SRCDIR)%.c=$(BINDIR)%.o} $(BINDIR)/kernel/cpu/interrupt.o
 
 all: build
 	qemu-system-i386 -fda os.bin
@@ -12,9 +12,12 @@ all: build
 $(BINDIR)/os.bin: $(BINDIR)/boot/bootloader.bin $(BINDIR)/kernel/kernel.bin
 	cat $^ > os.bin
 
-$(BINDIR)/kernel/kernel.bin: $(BINDIR)/kernel/kernel_entry.o ${OBJ}
-	/home/loochek/opt/cross/bin/i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
-
+$(BINDIR)/kernel/kernel.elf: $(BINDIR)/kernel/kernel_entry.o ${OBJ}
+	i686-elf-ld -o $@ -Ttext 0x1000 $^
+	
+$(BINDIR)/kernel/kernel.bin : $(BINDIR)/kernel/kernel.elf
+	i686-elf-objcopy -O binary $^ $@
+	
 $(BINDIR)/%.o: $(SRCDIR)/%.c
 	${CC} ${CFLAGS} -c $< -o $@
 	

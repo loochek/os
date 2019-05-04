@@ -24,9 +24,9 @@ or eax, 0x1            ;|switch to PM
 mov cr0, eax           ;|
 jmp CODE_SEG:init_pm   ;continue in protected mode
 	
-%include "source/boot/gdt.asm"
-%include "source/boot/disk.asm"
-%include "source/boot/print_real.asm"
+%include "sources/boot/gdt.asm"
+%include "sources/boot/disk.asm"
+%include "sources/boot/print_real.asm"
 
 [bits 32]
 init_pm:
