@@ -5,8 +5,6 @@
 #include "../libc/string.h"
 #include "../kernel.h"
 
-#define UNUSED(x) (void)(x)
-
 #define BACKSPACE 0x0E
 #define ENTER 0x1C
 
@@ -25,10 +23,10 @@ static const char sc_ascii[] = { '?', '?', '1', '2', '3', '4', '5', '6',
         'H', 'J', 'K', 'L', ';', '\'', '`', '?', '\\', 'Z', 'X', 'C', 'V',
         'B', 'N', 'M', ',', '.', '/', '?', '?', '?', ' '};
 
-static void keyboard_callback(registers_t regs)
+static void keyboard_callback()
 {
     /* The PIC leaves us the scancode in port 0x60 */
-    u8 scancode = port_byte_in(0x60);
+    unsigned char scancode = port_byte_in(0x60);
 
     if (scancode > SC_MAX)
         return;
@@ -51,7 +49,6 @@ static void keyboard_callback(registers_t regs)
         append(str, letter);
         print(str);
     }
-    UNUSED(regs);
 }
 
 void init_keyboard()
