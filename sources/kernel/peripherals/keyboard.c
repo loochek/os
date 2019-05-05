@@ -4,6 +4,7 @@
 #include "screen.h"
 #include "../libc/string.h"
 #include "../kernel.h"
+#include "stdint.h"
 
 #define BACKSPACE 0x0E
 #define ENTER 0x1C
@@ -26,7 +27,7 @@ static const char sc_ascii[] = { '?', '?', '1', '2', '3', '4', '5', '6',
 static void keyboard_callback()
 {
     /* The PIC leaves us the scancode in port 0x60 */
-    unsigned char scancode = port_byte_in(0x60);
+    uint8_t scancode = port_byte_in(0x60);
 
     if (scancode > SC_MAX)
         return;

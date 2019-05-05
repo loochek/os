@@ -1,5 +1,5 @@
 CC=i686-elf-gcc
-CFLAGS=-ffreestanding -nostdlib -pedantic -Wall -W -Werror -ggdb
+CFLAGS=-ffreestanding -pedantic -Wall -W -Werror -ggdb
 LDFLAGS=
 SRCDIR=sources
 BINDIR=binaries

@@ -1,6 +1,8 @@
 #ifndef ISR_H
 #define ISR_H
 
+#include "stdint.h"
+
 #define IRQ0 32
 #define IRQ1 33
 #define IRQ2 34
@@ -21,6 +23,6 @@
 typedef void (*isr_t)(void);
 
 void isr_install();
-void register_interrupt_handler(unsigned char n, isr_t handler);
+void register_interrupt_handler(uint8_t n, isr_t handler);
 
 #endif
