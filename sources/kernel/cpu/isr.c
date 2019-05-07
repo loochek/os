@@ -56,13 +56,13 @@ extern void irq14();
 extern void irq15();
 
 /* Struct which aggregates many registers */
-struct registers
+typedef struct
 {
     //uint32_t ds; /* Data segment selector */
     uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax; /* Pushed by pusha. */
     uint32_t int_no, err_code; /* Interrupt number and error code (if applicable) */
     uint32_t eip, cs, eflags, useresp, ss; /* Pushed by the processor automatically */
-};
+} registers;
 
 isr_t interrupt_handlers[256];
 
@@ -176,7 +176,7 @@ char* exception_messages[] =
 	"Reserved"
 };
 
-void isr_handler(struct registers *r)
+void isr_handler(registers *r)
 {
 	print("received interrupt: ");
 	char s[3];
@@ -192,7 +192,7 @@ void register_interrupt_handler(unsigned char n, isr_t handler)
 	interrupt_handlers[n] = handler;
 }
 
-void irq_handler(struct registers *r)
+void irq_handler(registers *r)
 {
 	/* After every interrupt we need to send an EOI to the PICs
 	 * or they will not send another interrupt again */

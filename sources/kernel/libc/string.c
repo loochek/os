@@ -20,6 +20,30 @@ void itoa(int n, char str[])
 	reverse(str);
 }
 
+void htoa(int n, char str[])
+{
+    int neg = 0;
+    if (n < 0)
+    {
+        neg = 1;
+        n = -n;
+    }
+    int i = 0;
+    while (n > 0)
+    {
+        int digit =n % 16;
+        if (digit >= 10)
+            str[i++] = 'A' + digit - 10;
+        else
+            str[i++] = '0' + digit;
+        n = n / 16;
+    }
+    if (neg)
+        str[i++] = '-';
+    str[i] = '\0';
+    reverse(str);
+}
+
 void reverse(char s[])
 {
     int i, j;
