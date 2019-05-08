@@ -3,7 +3,7 @@ CFLAGS=-ffreestanding -pedantic -Wall -W -Werror -ggdb
 LDFLAGS=
 SRCDIR=sources
 BINDIR=binaries
-SOURCES=$(wildcard $(SRCDIR)/kernel/*.c $(SRCDIR)/kernel/peripherals/*.c $(SRCDIR)/kernel/cpu/*.c $(SRCDIR)/kernel/libc/*.c $(SRCDIR)/kernel/fs/*.c)
+SOURCES=$(wildcard $(SRCDIR)/kernel/*.c $(SRCDIR)/kernel/peripherals/*.c $(SRCDIR)/kernel/cpu/*.c $(SRCDIR)/kernel/libc/*.c $(SRCDIR)/kernel/storage/*.c)
 OBJ=${SOURCES:$(SRCDIR)%.c=$(BINDIR)%.o} $(BINDIR)/kernel/cpu/interrupt.o
 
 all: build
@@ -11,12 +11,8 @@ all: build
 
 $(BINDIR)/os.bin: $(BINDIR)/boot/bootloader.bin $(BINDIR)/kernel/kernel.bin
 	cat $^ > os.bin
-	
-ramfs.o: ramfs.bin
-	i686-elf-ld -r -b binary -o $@ $^ 
 
-$(BINDIR)/kernel/kernel.elf: $(BINDIR)/kernel/kernel_entry.o ${OBJ} ramfs.o
-	
+$(BINDIR)/kernel/kernel.elf: $(BINDIR)/kernel/kernel_entry.o ${OBJ}
 	i686-elf-ld -o $@ -Ttext 0x1000 $^
 	
 $(BINDIR)/kernel/kernel.bin : $(BINDIR)/kernel/kernel.elf

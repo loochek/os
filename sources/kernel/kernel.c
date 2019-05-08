@@ -5,11 +5,9 @@
 #include "libc/string.h"
 #include "libc/mem.h"
 #include "stdint.h"
-#include "fs/ramfs.h"
+#include "storage/ata.h"
 
 static char welcome[] = "\xc9\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xbb\n\xba     govnoOS preprealpha 1     \xba\n\xba       2019     loochek        \xba\n\xba                               \xba\n\xc8\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xbc\n";
-
-extern unsigned char _binary_ramfs_bin_start[];
 
 void kmain() 
 {
@@ -21,6 +19,25 @@ void kmain()
     print("Set up keyboard\n");
     print(welcome);
     print("govnoOS>");
+}
+
+/* on Primary bus: ctrl->base =0x1F0, ctrl->dev_ctl =0x3F6. REG_CYL_LO=4, REG_CYL_HI=5, REG_DEVSEL=6 */
+int detect_devtype (int slavebit)
+{	/* waits until master drive is ready again */
+    port_byte_out(0x1F0 + 6, 0xA0 | slavebit<<4);
+    port_byte_in(0x3F6);			/* wait 400ns for drive select to work */
+    port_byte_in(0x3F6);
+    port_byte_in(0x3F6);
+    port_byte_in(0x3F6);
+    unsigned cl=port_byte_in(0x1F0 + 4);	/* get the "signature bytes" */
+    unsigned ch=port_byte_in(0x1F0 + 4);
+
+    /* differentiate ATA, ATAPI, SATA and SATAPI */
+    if (cl==0x14 && ch==0xEB) return 0;
+    if (cl==0x69 && ch==0x96) return 1;
+    if (cl==0 && ch == 0) return 2;
+    if (cl==0x3c && ch==0xc3) return 3;
+    return 4;
 }
 
 void handle_user_input(char cmd[])
@@ -68,10 +85,9 @@ void handle_user_input(char cmd[])
     }
     else if (strcmp(cmd, "FS") == 0)
     {
-        fs_header* header = (fs_header*)_binary_ramfs_bin_start;
-        dir_node *dir = (dir_node*) (header->root_offset + _binary_ramfs_bin_start);
-        print_dir(dir, (uint32_t) _binary_ramfs_bin_start);
-
+        char sector[512];
+        read_lba28(0, 1, sector);
+        print(sector);
     }
     else
     {
