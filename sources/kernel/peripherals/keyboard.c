@@ -27,7 +27,7 @@ static const char sc_ascii[] = { '?', '?', '1', '2', '3', '4', '5', '6',
 static void keyboard_callback()
 {
     /* The PIC leaves us the scancode in port 0x60 */
-    uint8_t scancode = port_byte_in(0x60);
+    uint8_t scancode = inportb(0x60);
 
     if (scancode > SC_MAX)
         return;

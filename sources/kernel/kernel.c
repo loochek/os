@@ -24,13 +24,13 @@ void kmain()
 /* on Primary bus: ctrl->base =0x1F0, ctrl->dev_ctl =0x3F6. REG_CYL_LO=4, REG_CYL_HI=5, REG_DEVSEL=6 */
 int detect_devtype (int slavebit)
 {	/* waits until master drive is ready again */
-    port_byte_out(0x1F0 + 6, 0xA0 | slavebit<<4);
-    port_byte_in(0x3F6);			/* wait 400ns for drive select to work */
-    port_byte_in(0x3F6);
-    port_byte_in(0x3F6);
-    port_byte_in(0x3F6);
-    unsigned cl=port_byte_in(0x1F0 + 4);	/* get the "signature bytes" */
-    unsigned ch=port_byte_in(0x1F0 + 4);
+    outportb(0x1F0 + 6, 0xA0 | slavebit<<4);
+    inportb(0x3F6);			/* wait 400ns for drive select to work */
+    inportb(0x3F6);
+    inportb(0x3F6);
+    inportb(0x3F6);
+    unsigned cl=inportb(0x1F0 + 4);	/* get the "signature bytes" */
+    unsigned ch=inportb(0x1F0 + 4);
 
     /* differentiate ATA, ATAPI, SATA and SATAPI */
     if (cl==0x14 && ch==0xEB) return 0;
@@ -85,9 +85,19 @@ void handle_user_input(char cmd[])
     }
     else if (strcmp(cmd, "FS") == 0)
     {
-        char sector[512];
-        read_lba28(0, 1, sector);
-        print(sector);
+        char serial[20], firmware[8], model[40];
+        if (identify(serial, firmware, model))
+        {
+            print("Detected drive: ");
+            print(model);
+            print("\nS/N: ");
+            print(serial);
+            print("\nFirmware version: ");
+            print(firmware);
+            print("\n");
+        }
+        else
+            print("Error occured!\n");
     }
     else
     {
